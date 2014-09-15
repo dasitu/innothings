@@ -1,6 +1,64 @@
 <?php
 require "initial.php";
 
+//********** Log related function ************//
+$app->log->setEnabled(true);
+$app->log->setWriter(new \Slim\Logger\DateTimeFileWriter());
+
+//There are some level can be used, Only messages that have a level less than the current log object’s level will be logged.
+/*
+\Slim\Log::EMERGENCY
+Level 1
+\Slim\Log::ALERT
+Level 2
+\Slim\Log::CRITICAL
+Level 3
+\Slim\Log::ERROR
+Level 4
+\Slim\Log::WARN
+Level 5
+\Slim\Log::NOTICE
+Level 6
+\Slim\Log::INFO
+Level 7
+\Slim\Log::DEBUG
+Level 8
+*/
+$app->log->setLevel(\Slim\Log::DEBUG);
+
+//Use hook to log some generic access messages
+$app->hook('slim.before.dispatch', function () use ($app) {
+	$log = $app->getLog();
+    $request = $app->request;
+	$ip = $request->getIp();
+	$method = $app->request->getMethod();
+    $log->debug("[$ip]Request path: [$method]" . $request->getPathInfo());
+});
+$app->hook('slim.after.router', function () use ($app) {
+	$log = $app->getLog();
+    $request = $app->request;
+	$ip = $request->getIp();
+    $response = $app->response;
+	$log->debug("[$ip]Response status: " . $response->getStatus());
+}); 
+
+//example and initial testing
+$app->get('/hello/:name', function ($name) use ($app) {
+	try{
+		$log = $app->getLog();
+		$log->debug("Get the parameter: $name.");
+		if($name == "exception"){
+			throw new Exception('User exception is trying');
+		}
+		echo "Hello, $name";	
+	}
+	catch (Exception $e) {
+		$app->response()->status(400);
+		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
+	}
+});
+
 //********** some useful functions **********//
 //Get API key from HTTP header, then return the usr_id if it is valid
 function validateApiKey($app, $db){
@@ -72,6 +130,7 @@ $app->post('/user', function() use ($app, $db) {
 	catch (Exception $e) {
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -97,6 +156,7 @@ $app->get('/user/:id', function($id) use ($app, $db) {
 	catch (Exception $e){
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -137,6 +197,7 @@ $app->put('/user/:id', function($id) use ($app, $db) {
 	catch (Exception $e) {
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -161,6 +222,7 @@ $app->delete('/user/:id', function($id) use ($app, $db) {
 	catch (Exception $e){
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -208,6 +270,7 @@ $app->post('/device', function() use ($app, $db) {
 	catch (Exception $e) {
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -234,6 +297,7 @@ $app->get('/device/:id', function($id) use ($app, $db) {
 	catch (Exception $e){
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -262,6 +326,7 @@ $app->get('/device', function() use ($app, $db) {
 	catch (Exception $e){
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -294,6 +359,7 @@ $app->put('/device/:id', function($id) use ($app, $db) {
 	catch (Exception $e) {
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -318,6 +384,7 @@ $app->delete('/device/:id', function($id) use ($app, $db) {
 	catch (Exception $e){
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -359,6 +426,7 @@ $app->post('/device/:id/sensor', function($dev_id) use ($app, $db) {
 	catch (Exception $e) {
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -383,6 +451,7 @@ $app->get('/device/:id/sensor/:sid', function($dev_id, $sen_id) use ($app, $db){
 	catch (Exception $e){
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -409,6 +478,7 @@ $app->get('/device/:id/sensor', function($dev_id) use ($app, $db) {
 	catch (Exception $e){
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -440,6 +510,7 @@ $app->put('/device/:id/sensor/:sid', function($dev_id, $sen_id) use ($app, $db) 
 	catch (Exception $e) {
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -464,6 +535,7 @@ $app->delete('/device/:id/sensor/:sid', function($dev_id, $sen_id) use ($app, $d
 	catch (Exception $e){
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -519,6 +591,7 @@ $app->post('/device/:id/sensor/:sid/datapoint', function($dev_id, $sen_id) use (
 	catch (Exception $e) {
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -548,6 +621,7 @@ $app->get('/device/:id/sensor/:sid/datapoint', function($dev_id, $sen_id) use ($
 	catch (Exception $e){
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -576,6 +650,7 @@ $app->get('/device/:id/sensor/:sid/datapoint/:did', function($dev_id, $sen_id, $
 	catch (Exception $e){
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -622,6 +697,7 @@ $app->put('/device/:id/sensor/:sid/datapoint/:did', function($dev_id, $sen_id, $
 	catch (Exception $e) {
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
@@ -646,6 +722,7 @@ $app->delete('/device/:id/sensor/:sid/datapoint/:did', function($dev_id, $sen_id
 	catch (Exception $e){
 		$app->response()->status(400);
 		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
 
