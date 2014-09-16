@@ -401,14 +401,17 @@ HTTP Body
 {{{
 }}}
 
-2.2	设备相关的API
-2.2.1	创建单个新的设备
-2.2.1.1	输入
+==2.2	设备相关的API==
+===2.2.1	创建单个新的设备===
+====2.2.1.1	输入====
 
-HTTP Header
+HTTP Header 
+{{{
 POST http://198.23.226.199/innoapi/device HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {
 	"dev_name":"test1",
 	"dev_sn":"test_sn_ssssss",
@@ -416,26 +419,34 @@ HTTP Body
 	"dev_lat":0.444,
 	"dev_lon":0.555
 }
-2.2.1.2	输出
+}}}
+====2.2.1.2	输出====
 
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:07:02 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 14
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {"dev_id":"1"}
+}}}
 
-2.2.1.3	异常情况
-2.2.1.3.1	设备串号重复
+====2.2.1.3	异常情况====
+=====2.2.1.3.1	设备串号重复=====
 
 输入：test_sn_ssssss已经存在于数据库中
-HTTP Header
+HTTP Header 
+{{{
 POST http://198.23.226.199/innoapi/device HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {
 	"dev_name":"test1",
 	"dev_sn":"test_sn_ssssss",
@@ -443,9 +454,11 @@ HTTP Body
 	"dev_lat":0.444,
 	"dev_lon":0.555
 }
+}}}
 
 输出：
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 400 Bad Request
 Date: Mon, 25 Nov 2013 13:10:40 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
@@ -454,27 +467,36 @@ X-Status-Reason: dev_sn is already existed!
 Content-Length: 0
 Connection: close
 Content-Type: text/html
-HTTP Body
+}}}
+ HTTP Body 
+{{{
+}}}
 
+===2.2.2	获得单个设备的信息===
+====2.2.2.1	输入====
 
-2.2.2	获得单个设备的信息
-2.2.2.1	输入
-
-HTTP Header
+HTTP Header 
+{{{
 GET http://198.23.226.199/innoapi/device/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
+}}}
 
-2.2.2.2	输出
+====2.2.2.2	输出====
 
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:12:47 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 219
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {
 "dev_id":"1",
 "usr_id":"2",
@@ -486,15 +508,19 @@ HTTP Body
 "dev_created_time":"2013-11-25 16:07:02",
 "dev_modified_time":"2013-11-25 16:07:02"
 }
+}}}
 
-2.2.2.3	异常输出
-2.2.2.3.1	没找到相应的设备
+====2.2.2.3	异常输出====
+=====2.2.2.3.1	没找到相应的设备=====
 
 输入：设备ID为2的记录不存在或不属于该API-KEY所对应的用户
-HTTP Header
+HTTP Header 
+{{{
 GET http://198.23.226.199/innoapi/device/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {
 	"dev_name":"test1",
 	"dev_sn":"test_sn_ssssss",
@@ -502,9 +528,11 @@ HTTP Body
 	"dev_lat":0.444,
 	"dev_lon":0.555
 }
+}}}
 
 输出：
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 400 Bad Request
 Date: Mon, 25 Nov 2013 13:15:51 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
@@ -513,27 +541,36 @@ X-Status-Reason: No records
 Content-Length: 0
 Connection: close
 Content-Type: text/html
-HTTP Body
+}}}
+ HTTP Body 
+{{{
+}}}
 
+===2.2.3	获得当前用户所有设备的信息===
+====2.2.3.1	输入====
 
-2.2.3	获得当前用户所有设备的信息
-2.2.3.1	输入
-
-HTTP Header
+HTTP Header 
+{{{
 GET http://198.23.226.199/innoapi/device HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
+}}}
 
-2.2.3.2	输出
+====2.2.3.2	输出====
 
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:19:58 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 440
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 [
 {
 "dev_id":"1",
@@ -558,19 +595,24 @@ HTTP Body
 "dev_modified_time":"2013-11-25 16:19:46"
 }
 ]
+}}}
 
-2.2.3.3	异常输出
-2.2.3.3.1	没找到相应的设备
+====2.2.3.3	异常输出====
+=====2.2.3.3.1	没找到相应的设备=====
 
 输入：没有找到属于该API-KEY所对应的用户的设备
-HTTP Header
+HTTP Header 
+{{{
 GET http://198.23.226.199/innoapi/device HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
-
+}}}
+ HTTP Body 
+{{{
+}}}
 
 输出：
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 400 Bad Request
 Date: Mon, 25 Nov 2013 13:15:51 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
@@ -579,16 +621,21 @@ X-Status-Reason: No records
 Content-Length: 0
 Connection: close
 Content-Type: text/html
-HTTP Body
+}}}
+ HTTP Body 
+{{{
+}}}
 
+===2.2.4	更新单个设备的信息===
+====2.2.4.1	输入====
 
-2.2.4	更新单个设备的信息
-2.2.4.1	输入
-
-HTTP Header
+HTTP Header 
+{{{
 PUT http://198.23.226.199/innoapi/device/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {
 	"dev_name":"test1",
 	"dev_sn":"test_sn_sssss1",
@@ -596,87 +643,115 @@ HTTP Body
 	"dev_lat":0.444,
 	"dev_lon":0.555
 }
-2.2.4.2	输出
+}}}
+====2.2.4.2	输出====
 
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:24:16 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {"success":1}
-2.2.4.3	异常输出
+}}}
+====2.2.4.3	异常输出====
 
-2.2.5	删除单个设备
-2.2.5.1	输入
+===2.2.5	删除单个设备===
+====2.2.5.1	输入====
 
-HTTP Header
+HTTP Header 
+{{{
 DELETE http://198.23.226.199/innoapi/device/2 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
+}}}
 
-2.2.5.2	输出
+====2.2.5.2	输出====
 
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:26:41 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {"success":1}
+}}}
 
-2.2.5.3	异常输出
+===2.2.5.3	异常输出===
 
-2.3	传感器相关的API
-2.3.1	创建单个新的传感器
-2.3.1.1	输入
+==2.3	传感器相关的API==
+===2.3.1	创建单个新的传感器===
+====2.3.1.1	输入====
 
-HTTP Header
+HTTP Header 
+{{{
 POST http://198.23.226.199/innoapi/device/1/sensor HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {
 	"sen_name":"sensor1",
 	"sen_desc":"test sensor",
 	"sen_unit":"Temp",
 	"sen_unit_symbol":"C"
 }
-2.3.1.2	输出
+}}}
+====2.3.1.2	输出====
 
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:28:46 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 14
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {"sen_id":"1"}
+}}}
 
-2.3.1.3	异常输出
+====2.3.1.3	异常输出====
 
-2.3.2	获得单个传感器的信息
-2.3.2.1	输入
+===2.3.2	获得单个传感器的信息===
+====2.3.2.1	输入====
 
-HTTP Header
+HTTP Header 
+{{{
 GET http://198.23.226.199/innoapi/device/1/sensor/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
+}}}
 
-2.3.2.2	输出
+====2.3.2.2	输出====
 
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:29:50 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 211
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 [
 {
 "sen_id":"1",
@@ -690,27 +765,34 @@ HTTP Body
 "usr_id":"2"
 }
 ]
+}}}
 
-2.3.2.3	异常输出
+====2.3.2.3	异常输出====
 
-2.3.3	获得指定设备下所有的传感器信息
-2.3.3.1	输入
+===2.3.3	获得指定设备下所有的传感器信息===
+====2.3.3.1	输入====
 
-HTTP Header
+HTTP Header 
+{{{
 GET http://198.23.226.199/innoapi/device/1/sensor HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
+}}}
+====2.3.3.2	输出====
 
-2.3.3.2	输出
-
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:31:10 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 421
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 [
 {
 "sen_id":"1",
@@ -735,116 +817,151 @@ HTTP Body
 "usr_id":"2"
 }
 ]
+}}}
 
-2.3.3.3	异常输出
+====2.3.3.3	异常输出====
 
-2.3.4	更新单个传感器信息
-2.3.4.1	输入
+===2.3.4	更新单个传感器信息===
+====2.3.4.1	输入====
 
-HTTP Header
+HTTP Header 
+{{{
 PUT http://198.23.226.199/innoapi/device/1/sensor/2 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {
 	"sen_name":"sensor2",
 	"sen_desc":"test sensor2",
 	"sen_unit":"Temp",
 	"sen_unit_symbol":"C"
 }
-2.3.4.2	输出
+}}}
+====2.3.4.2	输出====
 
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:32:35 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {"success":1}
+}}}
+====2.3.4.3	异常输出====
 
-2.3.4.3	异常输出
+===2.3.5	删除单个传感器===
+====2.3.5.1	输入====
 
-2.3.5	删除单个传感器
-2.3.5.1	输入
-
-HTTP Header
+HTTP Header 
+{{{
 DELETE http://198.23.226.199/innoapi/device/1/sensor/2 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
+}}}
 
-2.3.5.2	输出
+====2.3.5.2	输出====
 
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:33:31 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {"success":1}
+}}}
 
-2.3.5.3	异常输出
+====2.3.5.3	异常输出====
 
-2.4	数据相关的API
-2.4.1	写入单个数据
-2.4.1.1	输入
-2.4.1.1.1	单值类型
-HTTP Header
+==2.4	数据相关的API==
+===2.4.1	写入单个数据===
+====2.4.1.1	输入====
+=====2.4.1.1.1	单值类型=====
+HTTP Header 
+{{{
 POST http://198.23.226.199/innoapi/device/1/sensor/1/datapoint HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {
 "timestamp":"2012-03-15T16:13:14",
 "value":294.34,
 "type": "value"
 }
-2.4.1.1.2	其它Json类型
-HTTP Header
+}}}
+=====2.4.1.1.2	其它Json类型=====
+HTTP Header 
+{{{
 POST http://198.23.226.199/innoapi/device/1/sensor/1/datapoint HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {
 "timestamp":"2012-03-15T16:13:14",
 "value":{"lat":35.4567,"lng":46.1234,"speed":98.2,"offset":"yes"},
 "type":"gen"
 }
+}}}
 
-2.4.1.2	输出
+====2.4.1.2	输出====
 
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:38:03 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 14
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {"dat_id":"2"}
+}}}
 
-2.4.1.3	异常输出
+====2.4.1.3	异常输出====
 
-2.4.2	根据指定的时间段读取所有相关数据
-2.4.2.1	输入
+===2.4.2	根据指定的时间段读取所有相关数据===
+====2.4.2.1	输入====
 
-HTTP Header
+HTTP Header 
+{{{
 GET http://198.23.226.199/innoapi/device/1/sensor/1/datapoint HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 starttime: 2012-03-11 13:14
 endtime: 2013-03-16 5:24
-HTTP Body
+}}}
+ HTTP Body 
+{{{
+}}}
 
-2.4.2.2	输出
+====2.4.2.2	输出====
 
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:41:01 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 416
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 [
 {
 "dat_id":"1",
@@ -870,75 +987,100 @@ HTTP Body
 "dat_modified_time":"2013-11-25 16:38:03"
 }
 ]
+}}}
 
-2.4.2.3	异常输出
+====2.4.2.3	异常输出====
 
-2.4.3	读取单个数据
-2.4.3.1	输入
+===2.4.3	读取单个数据===
+====2.4.3.1	输入====
 
-HTTP Header
+HTTP Header 
+{{{
 GET http://198.23.226.199/innoapi/device/1/sensor/1/datapoint/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
+}}}
 
-2.4.3.2	输出
-
-HTTP Header
+====2.4.3.2	输出====
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:42:34 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 209
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {"dat_id":"1","sen_id":"1","dat_time":"2012-03-15 16:13:14","dat_value":"294.34","dat_type":"value","dat_created_time":"2013-11-25 16:35:01","dat_modified_time":"2013-11-25 16:35:01","dev_id":"1","usr_id":"2"}
+}}}
 
-2.4.3.3	异常输出
+====2.4.3.3	异常输出====
 
-2.4.4	更新单个数据
-2.4.4.1	输入
+===2.4.4	更新单个数据===
+====2.4.4.1	输入====
 
-HTTP Header
+HTTP Header 
+{{{
 PUT http://198.23.226.199/innoapi/device/1/sensor/1/datapoint/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {
   "timestamp":"2012-03-15T16:13:14",
   "value":274.34,
 "type": "value"
 }
-2.4.4.2	输出
+}}}
 
-HTTP Header
+====2.4.4.2	输出====
+
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:43:58 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {"success":1}
+}}}
 
-2.4.4.3	异常输出
+====2.4.4.3	异常输出====
 
-2.4.5	删除单个数据
-2.4.5.1	输入
+===2.4.5	删除单个数据===
+====2.4.5.1	输入====
 
-HTTP Header
+HTTP Header 
+{{{
 DELETE http://198.23.226.199/innoapi/device/1/sensor/1/datapoint/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
-HTTP Body
+}}}
+ HTTP Body 
+{{{
+}}}
 
-2.4.5.2	输出
+====2.4.5.2	输出====
 
-HTTP Header
+HTTP Header 
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:45:02 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
-HTTP Body
+}}}
+ HTTP Body 
+{{{
 {"success":1}
+}}}
 
-2.4.5.3	异常输出
+====2.4.5.3	异常输出====
