@@ -1,9 +1,9 @@
-=1	整体设计架构=
+=整体设计架构=
 
 采用PHP+MySQL的方式，提供HTTP接口。
 鉴于安全考虑，接口一律使用HTTPS传输，测试接口可以使用HTTP.
 
-==1.1	Server环境==
+==Server环境==
 Linux + MySQL + Apache(Nginx) + PHP
 
 ==数据库结构==
@@ -30,6 +30,42 @@ Linux + MySQL + Apache(Nginx) + PHP
 ||datapoint||获得数据||上传数据||更新数据||删除数据||
 
 ==用户相关的API==
+
+===获得用户的KPI-KEY===
+====输入====
+
+HTTP Header
+{{{
+GET http://198.23.226.199/innoapi/key HTTP/1.1
+account: test1
+password: test1
+mobile_code: 000000
+}}}
+HTTP Body
+{{{
+}}}
+
+====输出====
+
+HTTP Header
+{{{
+HTTP/1.1 200 OK
+Content-Type: application/json
+}}}
+HTTP Body
+{{{
+{"key":"49a98af413554b98775a3a30931da4fd"}
+}}}
+====异常情况====
+=====输入数据不完整=====
+account或者mobile_code至少要包含一个
+account必填
+	X-Status-Reason: Both password and mobile code are empty
+=====验证之后不正确=====
+X-Status-Reason: User name or mobile code is not correct or expired
+手机验证码有效期为5分钟
+X-Status-Reason: User name or password is not correct
+
 ===创建单个新用户===
 ====输入====
 
@@ -50,10 +86,6 @@ HTTP Body
 HTTP Header
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 12:27:00 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 14
 Content-Type: application/json
 }}}
 HTTP Body
@@ -100,13 +132,7 @@ HTTP Body
 HTTP Header
 {{{
 HTTP/1.1 400 Bad Request
-Date: Mon, 25 Nov 2013 12:23:16 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
 X-Status-Reason: User name and password is the mandatory parameters
-Content-Length: 0
-Connection: close
-Content-Type: text/html
 }}}
 HTTP Body
 {{{
@@ -136,9 +162,7 @@ Date: Mon, 25 Nov 2013 12:25:00 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 X-Status-Reason: User name is already existed!
-Content-Length: 0
-Connection: close
-Content-Type: text/html
+
 }}}
 HTTP Body
 {{{
@@ -161,10 +185,6 @@ HTTP Body
 HTTP Header
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 12:31:40 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 185
 Content-Type: application/json
 }}}
 HTTP Body
@@ -173,7 +193,7 @@ HTTP Body
 }}}
 ====异常情况====
 
-=====2.1.2.3.1	HTTP请求中未包含API-KEY或者不正确=====
+=====HTTP请求中未包含API-KEY或者不正确=====
 
 输入1：API-KEY缺失
 HTTP Header
@@ -198,19 +218,13 @@ HTTP Body
 HTTP Header
 {{{
 HTTP/1.1 400 Bad Request
-Date: Mon, 25 Nov 2013 12:32:52 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
 X-Status-Reason: Invalid API-KEY
-Content-Length: 0
-Connection: close
-Content-Type: text/html
 }}}
 HTTP Body
 {{{
 }}}
 
-=====2.1.2.3.2	HTTP请求URL中用户ID与API-KEY不匹配=====
+=====HTTP请求URL中用户ID与API-KEY不匹配=====
 
 输入：给定的API-KEY所对应的用户ID不是1
 HTTP Header
@@ -226,13 +240,7 @@ HTTP Body
 HTTP Header
 {{{
 HTTP/1.1 400 Bad Request
-Date: Mon, 25 Nov 2013 12:42:41 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
 X-Status-Reason: You are not allowed to see other user
-Content-Length: 0
-Connection: close
-Content-Type: text/html
 }}}
 HTTP Body
 {{{
@@ -259,10 +267,6 @@ HTTP Body
 HTTP Header
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 12:54:27 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 13
 Content-Type: application/json
 }}}
 HTTP Body
@@ -272,7 +276,7 @@ HTTP Body
 
 ====异常情况====
 
-=====2.1.3.3.1	HTTP请求URL中用户ID与API-KEY不匹配=====
+=====HTTP请求URL中用户ID与API-KEY不匹配=====
 
 输入：给定的API-KEY所对应的用户ID不是2
 HTTP Header
@@ -288,13 +292,7 @@ HTTP Body
 HTTP Header
 {{{
 HTTP/1.1 400 Bad Request
-Date: Mon, 25 Nov 2013 12:56:03 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
 X-Status-Reason: You are not allowed to update other user
-Content-Length: 0
-Connection: close
-Content-Type: text/html
 }}}
 HTTP Body
 {{{
@@ -343,13 +341,8 @@ HTTP Body
 HTTP Header
 {{{
 HTTP/1.1 400 Bad Request
-Date: Mon, 25 Nov 2013 12:23:16 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
 X-Status-Reason: User name and password is the mandatory parameters
-Content-Length: 0
-Connection: close
-Content-Type: text/html
+
 }}}
 HTTP Body
 {{{
@@ -372,10 +365,6 @@ HTTP Body
 HTTP Header
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:04:27 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 13
 Content-Type: application/json
 }}}
 HTTP Body
@@ -383,7 +372,7 @@ HTTP Body
 {"success":1}
 }}}
 ====异常输出====
-=====2.1.4.3.1	HTTP请求URL中用户ID与API-KEY不匹配=====
+=====HTTP请求URL中用户ID与API-KEY不匹配=====
 
 输入：给定的API-KEY所对应的用户ID不是2
 HTTP Header
@@ -399,13 +388,7 @@ HTTP Body
 HTTP Header
 {{{
 HTTP/1.1 400 Bad Request
-Date: Mon, 25 Nov 2013 13:02:20 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
 X-Status-Reason: You are not allowed to delete other user
-Content-Length: 0
-Connection: close
-Content-Type: text/html
 }}}
 HTTP Body
 {{{
@@ -435,10 +418,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:07:02 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 14
 Content-Type: application/json
 }}}
 HTTP Body
@@ -470,13 +449,8 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 400 Bad Request
-Date: Mon, 25 Nov 2013 13:10:40 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
 X-Status-Reason: dev_sn is already existed!
-Content-Length: 0
-Connection: close
-Content-Type: text/html
+
 }}}
 HTTP Body
 {{{
@@ -499,10 +473,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:12:47 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 219
 Content-Type: application/json
 }}}
 HTTP Body
@@ -544,13 +514,7 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 400 Bad Request
-Date: Mon, 25 Nov 2013 13:15:51 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
 X-Status-Reason: No records
-Content-Length: 0
-Connection: close
-Content-Type: text/html
 }}}
 HTTP Body
 {{{
@@ -573,10 +537,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:19:58 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 440
 Content-Type: application/json
 }}}
 HTTP Body
@@ -624,13 +584,7 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 400 Bad Request
-Date: Mon, 25 Nov 2013 13:15:51 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
 X-Status-Reason: No records
-Content-Length: 0
-Connection: close
-Content-Type: text/html
 }}}
 HTTP Body
 {{{
@@ -659,10 +613,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:24:16 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 13
 Content-Type: application/json
 }}}
 HTTP Body
@@ -688,10 +638,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:26:41 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 13
 Content-Type: application/json
 }}}
 HTTP Body
@@ -724,10 +670,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:28:46 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 14
 Content-Type: application/json
 }}}
 HTTP Body
@@ -754,10 +696,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:29:50 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 211
 Content-Type: application/json
 }}}
 HTTP Body
@@ -795,10 +733,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:31:10 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 421
 Content-Type: application/json
 }}}
 HTTP Body
@@ -853,10 +787,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:32:35 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 13
 Content-Type: application/json
 }}}
 HTTP Body
@@ -882,10 +812,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:33:31 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 13
 Content-Type: application/json
 }}}
 HTTP Body
@@ -932,10 +858,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:38:03 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 14
 Content-Type: application/json
 }}}
 HTTP Body
@@ -964,10 +886,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:41:01 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 416
 Content-Type: application/json
 }}}
 HTTP Body
@@ -1017,10 +935,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:42:34 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 209
 Content-Type: application/json
 }}}
 HTTP Body
@@ -1061,10 +975,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:43:58 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 13
 Content-Type: application/json
 }}}
 HTTP Body
@@ -1091,10 +1001,6 @@ HTTP Body
 HTTP Header 
 {{{
 HTTP/1.1 200 OK
-Date: Mon, 25 Nov 2013 13:45:02 GMT
-Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
-X-Powered-By: PHP/5.5.3
-Content-Length: 13
 Content-Type: application/json
 }}}
 HTTP Body
