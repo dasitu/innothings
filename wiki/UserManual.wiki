@@ -499,15 +499,15 @@ Content-Type: application/json
 HTTP Body
 {{{
 {
-"dev_id":"1",
-"usr_id":"2",
-"dev_name":"test1",
-"dev_sn":"test_sn_ssssss",
-"dev_desc":"no desc test 1",
-"dev_lat":"0.444",
-"dev_lon":"0.555",
-"dev_created_time":"2013-11-25 16:07:02",
-"dev_modified_time":"2013-11-25 16:07:02"
+	"dev_id":"1",
+	"usr_id":"2",
+	"dev_name":"test1",
+	"dev_sn":"test_sn_ssssss",
+	"dev_desc":"no desc test 1",
+	"dev_lat":"0.444",
+	"dev_lon":"0.555",
+	"dev_created_time":"2013-11-25 16:07:02",
+	"dev_modified_time":"2013-11-25 16:07:02"
 }
 }}}
 
@@ -573,28 +573,28 @@ Content-Type: application/json
 HTTP Body
 {{{
 [
-{
-"dev_id":"1",
-"usr_id":"2",
-"dev_name":"test1",
-"dev_sn":"test_sn_ssssss",
-"dev_desc":"no desc test 1",
-"dev_lat":"0.444",
-"dev_lon":"0.555",
-"dev_created_time":"2013-11-25 16:07:02",
-"dev_modified_time":"2013-11-25 16:07:02"
-},
-{
-"dev_id":"2",
-"usr_id":"2",
-"dev_name":"test1",
-"dev_sn":"test_sn_ssss2",
-"dev_desc":"no desc test 1",
-"dev_lat":"0.444",
-"dev_lon":"0.555",
-"dev_created_time":"2013-11-25 16:19:46",
-"dev_modified_time":"2013-11-25 16:19:46"
-}
+	{
+		"dev_id":"1",
+		"usr_id":"2",
+		"dev_name":"test1",
+		"dev_sn":"test_sn_ssssss",
+		"dev_desc":"no desc test 1",
+		"dev_lat":"0.444",
+		"dev_lon":"0.555",
+		"dev_created_time":"2013-11-25 16:07:02",
+		"dev_modified_time":"2013-11-25 16:07:02"
+	},
+	{
+		"dev_id":"2",
+		"usr_id":"2",
+		"dev_name":"test1",
+		"dev_sn":"test_sn_ssss2",
+		"dev_desc":"no desc test 1",
+		"dev_lat":"0.444",
+		"dev_lon":"0.555",
+		"dev_created_time":"2013-11-25 16:19:46",
+		"dev_modified_time":"2013-11-25 16:19:46"
+	}
 ]
 }}}
 
@@ -754,17 +754,17 @@ Content-Type: application/json
 HTTP Body
 {{{
 [
-{
-"sen_id":"1",
-"dev_id":"1",
-"sen_name":"sensor1",
-"sen_desc":"test sensor",
-"sen_unit":"Temp",
-"sen_unit_symbol":"C",
-"sen_created_time":"2013-11-25 16:28:46",
-"sen_modified_time":"2013-11-25 16:28:46",
-"usr_id":"2"
-}
+	{
+		"sen_id":"1",
+		"dev_id":"1",
+		"sen_name":"sensor1",
+		"sen_desc":"test sensor",
+		"sen_unit":"Temp",
+		"sen_unit_symbol":"C",
+		"sen_created_time":"2013-11-25 16:28:46",
+		"sen_modified_time":"2013-11-25 16:28:46",
+		"usr_id":"2"
+	}
 ]
 }}}
 
@@ -795,28 +795,28 @@ Content-Type: application/json
 HTTP Body
 {{{
 [
-{
-"sen_id":"1",
-"dev_id":"1",
-"sen_name":"sensor1",
-"sen_desc":"test sensor",
-"sen_unit":"Temp",
-"sen_unit_symbol":"C",
-"sen_created_time":"2013-11-25 16:28:46",
-"sen_modified_time":"2013-11-25 16:28:46",
-"usr_id":"2"
-},
-{
-"sen_id":"2",
-"dev_id":"1",
-"sen_name":"sensor1",
-"sen_desc":"test sensor",
-"sen_unit":"Temp",
-"sen_unit_symbol":"C",
-"sen_created_time":"2013-11-25 16:31:00",
-"sen_modified_time":"2013-11-25 16:31:00",
-"usr_id":"2"
-}
+	{
+		"sen_id":"1",
+		"dev_id":"1",
+		"sen_name":"sensor1",
+		"sen_desc":"test sensor",
+		"sen_unit":"Temp",
+		"sen_unit_symbol":"C",
+		"sen_created_time":"2013-11-25 16:28:46",
+		"sen_modified_time":"2013-11-25 16:28:46",
+		"usr_id":"2"
+	},
+	{
+		"sen_id":"2",
+		"dev_id":"1",
+		"sen_name":"sensor1",
+		"sen_desc":"test sensor",
+		"sen_unit":"Temp",
+		"sen_unit_symbol":"C",
+		"sen_created_time":"2013-11-25 16:31:00",
+		"sen_modified_time":"2013-11-25 16:31:00",
+		"usr_id":"2"
+	}
 ]
 }}}
 
@@ -912,9 +912,9 @@ API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 HTTP Body
 {{{
 {
-"timestamp":"2012-03-15T16:13:14",
-"value":{"lat":35.4567,"lng":46.1234,"speed":98.2,"offset":"yes"},
-"type":"gen"
+	"timestamp":"2012-03-15T16:13:14",
+	"value":{"lat":35.4567,"lng":46.1234,"speed":98.2,"offset":"yes"},
+	"type":"gen"
 }
 }}}
 
@@ -964,29 +964,29 @@ Content-Type: application/json
 HTTP Body
 {{{
 [
-{
-"dat_id":"1",
-"sen_id":"1",
-"dat_time":"2012-03-15 16:13:14",
-"dat_value":"294.34",
-"dat_type":"value",
-"dat_created_time":"2013-11-25 16:35:01",
-"dat_modified_time":"2013-11-25 16:35:01"
-},
-{
-"dat_id":"2",
-"sen_id":"1",
-"dat_time":"2012-03-15 16:13:14",
-"dat_value": {
-                       "lat":35.4567,
-                      "lng":46.1234,
-                      "speed":98.2,
-                      "offset":"yes"
-},
-"dat_type":"gen",
-"dat_created_time":"2013-11-25 16:38:03",
-"dat_modified_time":"2013-11-25 16:38:03"
-}
+	{
+		"dat_id":"1",
+		"sen_id":"1",
+		"dat_time":"2012-03-15 16:13:14",
+		"dat_value":"294.34",
+		"dat_type":"value",
+		"dat_created_time":"2013-11-25 16:35:01",
+		"dat_modified_time":"2013-11-25 16:35:01"
+	},
+	{
+		"dat_id":"2",
+		"sen_id":"1",
+		"dat_time":"2012-03-15 16:13:14",
+		"dat_value": {
+				   "lat":35.4567,
+				  "lng":46.1234,
+				  "speed":98.2,
+				  "offset":"yes"
+		},
+		"dat_type":"gen",
+		"dat_created_time":"2013-11-25 16:38:03",
+		"dat_modified_time":"2013-11-25 16:38:03"
+	}
 ]
 }}}
 
@@ -1016,7 +1016,16 @@ Content-Type: application/json
 }}}
 HTTP Body
 {{{
-{"dat_id":"1","sen_id":"1","dat_time":"2012-03-15 16:13:14","dat_value":"294.34","dat_type":"value","dat_created_time":"2013-11-25 16:35:01","dat_modified_time":"2013-11-25 16:35:01","dev_id":"1","usr_id":"2"}
+{
+	"dat_id":"1",
+	"sen_id":"1",
+	"dat_time":"2012-03-15 16:13:14",
+	"dat_value":"294.34","dat_type":"value",
+	"dat_created_time":"2013-11-25 16:35:01",
+	"dat_modified_time":"2013-11-25 16:35:01",
+	"dev_id":"1",
+	"usr_id":"2"
+}
 }}}
 
 ====2.4.3.3	异常输出====
@@ -1032,9 +1041,9 @@ API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 HTTP Body
 {{{
 {
-  "timestamp":"2012-03-15T16:13:14",
-  "value":274.34,
-"type": "value"
+	"timestamp":"2012-03-15T16:13:14",
+	"value":274.34,
+	"type": "value"
 }
 }}}
 
