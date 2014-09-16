@@ -58,15 +58,13 @@ HTTP Body
 }}}
 ====异常情况====
 =====输入数据不完整=====
-# account或者mobile_code至少要包含一个
-# account必填
-* X-Status-Reason: Both password and mobile code are empty
+ # account或者mobile_code至少要包含一个
+ # account必填
+ * X-Status-Reason: Both password and mobile code are empty
 =====验证之后不正确=====
-* X-Status-Reason: User name or mobile code is not correct or expired
-
-	* 手机验证码有效期为5分钟
-
-* X-Status-Reason: User name or password is not correct
+ * X-Status-Reason: User name or mobile code is not correct or expired
+ * 手机验证码有效期为5分钟
+ * X-Status-Reason: User name or password is not correct
 
 ===创建单个新用户===
 ====输入====
