@@ -1,14 +1,11 @@
-1	整体设计架构
+=1	整体设计架构=
 
 采用PHP+MySQL的方式，提供HTTP接口。
 
-1.1	Server环境
+==1.1	Server环境==
+Linux + MySQL + Apache(Nginx) + PHP
 
-XAMPP Linux 1.8.3
-Apache 2.4.4, MySQL 5.6.11, PHP 5.5.3 & PEAR + SQLite 2.8.17/3.7.17 + multibyte (mbstring) support, Perl 5.16.3, ProFTPD 1.3.4c, phpMyAdmin 4.0.4, OpenSSL 1.0.1e, GD 2.0.35, Freetype2 2.4.8, libjpeg 8d, libpng 1.5.9, gdbm 1.8.3, zlib 1.2.3, expat 2.0.1, Sablotron 1.0.3, libxml 2.8.0, Ming 0.4.5, Webalizer 2.23-05, pdf class 0.11.7, ncurses 5.9, mod_perl 2.0.8, FreeTDS 0.91, gettext 0.18.1.1, IMAP C-Client 2007e, OpenLDAP (client) 2.4.21, mcrypt 2.5.8, mhash 0.9.9.9, eAccelerator 0.9.6.1, cURL 7.30.0, libxslt 1.1.28, libapreq 2.12, FPDF 1.7, bzip 1.0.6, ICU4C Library 4.8.1, APR (1.4.6), APR-utils (1.5.1) 
-Server端配置参考server配置文档。
-
-1.2	数据库结构
+==1.2	数据库结构==
 数据库分为类似的两套表架构，一套保存所有的数据，称为全数据表，用后缀为_all的表来标识，用户不能通过API对全数据表内容进行操作。另外一套则保存当前用户的数据，称为当前表。两者之间通过一系列定义在数据库中的触发器来完成如下的关系：
 •	插入当前表的数据，将插入到全数据表同一ID的数据。
 •	更新当前表的数据，将更新到全数据表同一ID的数据。
@@ -20,60 +17,78 @@ Server端配置参考server配置文档。
 •	数据表datapoint
 
 数据库表结构，外键关联与唯一约束，请参考数据库描述文档。
-2	API介绍
+=2	API介绍=
 
-2.1	用户相关的API
-2.1.1	创建单个新用户
-2.1.1.1	输入
+==2.1	用户相关的API==
+===2.1.1	创建单个新用户===
+====2.1.1.1	输入====
 
 HTTP Header
+{{{
 POST http://198.23.226.199/innoapi/user HTTP/1.1
+}}}
 HTTP Body
+{{{
 {
 	"usr_name": "test1",
 	"usr_pwd":"test1",
 	"usr_email":"test@test"
 }
-2.1.1.2	输出
+}}}
+====2.1.1.2	输出====
 
 HTTP Header
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 12:27:00 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 14
 Content-Type: application/json
+}}}
 HTTP Body
+{{{
 {"usr_id":"2"}
-2.1.1.3	异常情况
-2.1.1.3.1	输入数据不完整
+}}}
+====2.1.1.3	异常情况====
+=====2.1.1.3.1	输入数据不完整=====
 
 输入1：usr_pwd 缺失
 HTTP Header
+{{{
 POST http://198.23.226.199/innoapi/user HTTP/1.1
+}}}
 HTTP Body
+{{{
 {
 	"usr_name": "test1",
 	"usr_email":"test@test"
 }
-
+}}}
 输入2：usr_name缺失
 HTTP Header
+{{{
 POST http://198.23.226.199/innoapi/user HTTP/1.1
+}}}
 HTTP Body
+{{{
 {
 	"usr_pwd":"test1",
 	"usr_email":"test@test"
 }
-
+}}}
 输入3：整个信息缺失
 HTTP Header
+{{{
 POST http://198.23.226.199/innoapi/user HTTP/1.1
+}}}
 HTTP Body
-
+{{{
+}}}
 
 输出：
 HTTP Header
+{{{
 HTTP/1.1 400 Bad Request
 Date: Mon, 25 Nov 2013 12:23:16 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
@@ -82,23 +97,30 @@ X-Status-Reason: User name and password is the mandatory parameters
 Content-Length: 0
 Connection: close
 Content-Type: text/html
+}}}
 HTTP Body
+{{{
+}}}
 
-
-2.1.1.3.2	用户名重复
+=====2.1.1.3.2	用户名重复=====
 
 输入：test1已经存在于数据库中
+
 HTTP Header
+{{{
 POST http://198.23.226.199/innoapi/user HTTP/1.1
+}}}
 HTTP Body
+{{{
 {
 	"usr_name": "test1",
 	"usr_pwd":"test1",
 	"usr_email":"test@test"
 }
-
+}}}
 输出：
 HTTP Header
+{{{
 HTTP/1.1 400 Bad Request
 Date: Mon, 25 Nov 2013 12:25:00 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
@@ -107,48 +129,64 @@ X-Status-Reason: User name is already existed!
 Content-Length: 0
 Connection: close
 Content-Type: text/html
+}}}
 HTTP Body
+{{{
+}}}
 
-
-2.1.2	获得单个用户的信息
-2.1.2.1	输入
+===2.1.2	获得单个用户的信息===
+====2.1.2.1	输入====
 
 HTTP Header
+{{{
 GET http://198.23.226.199/innoapi/user/1 HTTP/1.1
 API-KEY:427315b472e04c41c1eb91316c4e66ad
+}}}
 HTTP Body
+{{{
+}}}
 
-2.1.2.2	输出
+====2.1.2.2	输出====
 
 HTTP Header
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 12:31:40 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 185
 Content-Type: application/json
+}}}
 HTTP Body
+{{{
 {"usr_id":"1","usr_name":"test1","usr_email":"test@test","usr_key":"427315b472e04c41c1eb91316c4e66ad","usr_created_time":"2013-11-20 10:14:39","usr_modified_time":"2013-11-20 10:14:39"}
+}}}
+====2.1.2.3	异常情况====
 
-2.1.2.3	异常情况
-
-2.1.2.3.1	HTTP请求中未包含API-KEY或者不正确
+=====2.1.2.3.1	HTTP请求中未包含API-KEY或者不正确=====
 
 输入1：API-KEY缺失
 HTTP Header
+{{{
 GET http://198.23.226.199/innoapi/user/1 HTTP/1.1
+}}}
 HTTP Body
-
+{{{
+}}}
 
 输入2：给定的API-KEY找不到任何匹配的用户
 HTTP Header
+{{{
 GET http://198.23.226.199/innoapi/user/1 HTTP/1.1
 API-KEY:427315b472e04c41c1eb91316c4e66ad
+}}}
 HTTP Body
-
+{{{
+}}}
 
 输出：
 HTTP Header
+{{{
 HTTP/1.1 400 Bad Request
 Date: Mon, 25 Nov 2013 12:32:52 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
@@ -157,20 +195,26 @@ X-Status-Reason: Invalid API-KEY
 Content-Length: 0
 Connection: close
 Content-Type: text/html
+}}}
 HTTP Body
+{{{
+}}}
 
-
-2.1.2.3.2	HTTP请求URL中用户ID与API-KEY不匹配
+=====2.1.2.3.2	HTTP请求URL中用户ID与API-KEY不匹配=====
 
 输入：给定的API-KEY所对应的用户ID不是1
 HTTP Header
+{{{
 GET http://198.23.226.199/innoapi/user/1 HTTP/1.1
 API-KEY:427315b472e04c41c1eb91316c4e66ad
+}}}
 HTTP Body
-
+{{{
+}}}
 
 输出：
 HTTP Header
+{{{
 HTTP/1.1 400 Bad Request
 Date: Mon, 25 Nov 2013 12:42:41 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
@@ -179,46 +223,60 @@ X-Status-Reason: You are not allowed to see other user
 Content-Length: 0
 Connection: close
 Content-Type: text/html
+}}}
 HTTP Body
+{{{
+}}}
 
-
-2.1.3	更新单个用户信息
-2.1.3.1	输入
+===2.1.3	更新单个用户信息===
+====2.1.3.1	输入====
 
 HTTP Header
+{{{
 PUT http://198.23.226.199/innoapi/user/1 HTTP/1.1
 API-KEY: 427315b472e04c41c1eb91316c4e66ad
+}}}
 HTTP Body
+{{{
 {
 	"usr_name": "test1",
 	"usr_pwd":"test2",
 	"usr_email":"test@test"
 }
-2.1.3.2	输出
+}}}
+====2.1.3.2	输出====
 
 HTTP Header
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 12:54:27 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
+}}}
 HTTP Body
+{{{
 {"success":1}
+}}}
 
-2.1.3.3	异常情况
+====2.1.3.3	异常情况====
 
-2.1.3.3.1	HTTP请求URL中用户ID与API-KEY不匹配
+=====2.1.3.3.1	HTTP请求URL中用户ID与API-KEY不匹配=====
 
 输入：给定的API-KEY所对应的用户ID不是2
 HTTP Header
+{{{
 PUT http://198.23.226.199/innoapi/user/2 HTTP/1.1
 API-KEY:427315b472e04c41c1eb91316c4e66ad
+}}}
 HTTP Body
-
+{{{
+}}}
 
 输出：
 HTTP Header
+{{{
 HTTP/1.1 400 Bad Request
 Date: Mon, 25 Nov 2013 12:56:03 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
@@ -227,40 +285,53 @@ X-Status-Reason: You are not allowed to update other user
 Content-Length: 0
 Connection: close
 Content-Type: text/html
+}}}
 HTTP Body
+{{{
+}}}
 
-
-2.1.3.3.2	输入数据不完整
+=====2.1.3.3.2	输入数据不完整=====
 
 输入1：usr_pwd 缺失
 HTTP Header
+{{{
 PUT  http://198.23.226.199/innoapi/user/1 HTTP/1.1
 API-KEY:427315b472e04c41c1eb91316c4e66ad
+}}}
 HTTP Body
+{{{
 {
 	"usr_name": "test1",
 	"usr_email":"test@test"
 }
-
+}}}
 输入2：usr_name缺失
 HTTP Header
+{{{
 PUT  http://198.23.226.199/innoapi/user/1 HTTP/1.1
 API-KEY:427315b472e04c41c1eb91316c4e66ad
+}}}
 HTTP Body
+{{{
 {
 	"usr_pwd":"test1",
 	"usr_email":"test@test"
 }
+}}}
 
 输入3：整个信息缺失
 HTTP Header
+{{{
 PUT  http://198.23.226.199/innoapi/user/1 HTTP/1.1
 API-KEY:427315b472e04c41c1eb91316c4e66ad
+}}}
 HTTP Body
-
+{{{
+}}}
 
 输出：
 HTTP Header
+{{{
 HTTP/1.1 400 Bad Request
 Date: Mon, 25 Nov 2013 12:23:16 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
@@ -269,41 +340,54 @@ X-Status-Reason: User name and password is the mandatory parameters
 Content-Length: 0
 Connection: close
 Content-Type: text/html
+}}}
 HTTP Body
+{{{
+}}}
 
-
-2.1.4	删除单个用户
-2.1.4.1	输入
+===2.1.4	删除单个用户===
+====2.1.4.1	输入====
 
 HTTP Header
+{{{
 DELETE http://198.23.226.199/innoapi/user/2 HTTP/1.1
 API-KEY: 427315b472e04c41c1eb91316c4e66ad
+}}}
 HTTP Body
+{{{
+}}}
 
-2.1.4.2	输出
+====2.1.4.2	输出====
 
 HTTP Header
+{{{
 HTTP/1.1 200 OK
 Date: Mon, 25 Nov 2013 13:04:27 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
 X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
+}}}
 HTTP Body
+{{{
 {"success":1}
-
-2.1.4.3	异常输出
-2.1.4.3.1	HTTP请求URL中用户ID与API-KEY不匹配
+}}}
+====2.1.4.3	异常输出====
+=====2.1.4.3.1	HTTP请求URL中用户ID与API-KEY不匹配=====
 
 输入：给定的API-KEY所对应的用户ID不是2
 HTTP Header
+{{{
 DELETE http://198.23.226.199/innoapi/user/2 HTTP/1.1
 API-KEY: 427315b472e04c41c1eb91316c4e66ad
+}}}
 HTTP Body
-
+{{{
+}}}
 
 输出：
 HTTP Header
+{{{
 HTTP/1.1 400 Bad Request
 Date: Mon, 25 Nov 2013 13:02:20 GMT
 Server: Apache/2.4.4 (Unix) OpenSSL/1.0.1e PHP/5.5.3 mod_perl/2.0.8-dev Perl/v5.16.3
@@ -312,8 +396,10 @@ X-Status-Reason: You are not allowed to delete other user
 Content-Length: 0
 Connection: close
 Content-Type: text/html
+}}}
 HTTP Body
-
+{{{
+}}}
 
 2.2	设备相关的API
 2.2.1	创建单个新的设备
