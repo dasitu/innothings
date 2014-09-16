@@ -1,6 +1,7 @@
 =1	整体设计架构=
 
 采用PHP+MySQL的方式，提供HTTP接口。
+鉴于安全考虑，接口一律使用HTTPS传输，测试接口可以使用HTTP.
 
 ==1.1	Server环境==
 Linux + MySQL + Apache(Nginx) + PHP
@@ -410,7 +411,7 @@ HTTP Header
 POST http://198.23.226.199/innoapi/device HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {
 	"dev_name":"test1",
@@ -431,7 +432,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 14
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {"dev_id":"1"}
 }}}
@@ -445,7 +446,7 @@ HTTP Header
 POST http://198.23.226.199/innoapi/device HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {
 	"dev_name":"test1",
@@ -468,7 +469,7 @@ Content-Length: 0
 Connection: close
 Content-Type: text/html
 }}}
- HTTP Body 
+HTTP Body
 {{{
 }}}
 
@@ -480,7 +481,7 @@ HTTP Header
 GET http://198.23.226.199/innoapi/device/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 }}}
 
@@ -495,7 +496,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 219
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {
 "dev_id":"1",
@@ -519,7 +520,7 @@ HTTP Header
 GET http://198.23.226.199/innoapi/device/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {
 	"dev_name":"test1",
@@ -542,7 +543,7 @@ Content-Length: 0
 Connection: close
 Content-Type: text/html
 }}}
- HTTP Body 
+HTTP Body
 {{{
 }}}
 
@@ -554,7 +555,7 @@ HTTP Header
 GET http://198.23.226.199/innoapi/device HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 }}}
 
@@ -569,7 +570,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 440
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 [
 {
@@ -606,7 +607,7 @@ HTTP Header
 GET http://198.23.226.199/innoapi/device HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 }}}
 
@@ -622,7 +623,7 @@ Content-Length: 0
 Connection: close
 Content-Type: text/html
 }}}
- HTTP Body 
+HTTP Body
 {{{
 }}}
 
@@ -634,7 +635,7 @@ HTTP Header
 PUT http://198.23.226.199/innoapi/device/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {
 	"dev_name":"test1",
@@ -655,7 +656,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {"success":1}
 }}}
@@ -669,7 +670,7 @@ HTTP Header
 DELETE http://198.23.226.199/innoapi/device/2 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 }}}
 
@@ -684,7 +685,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {"success":1}
 }}}
@@ -700,7 +701,7 @@ HTTP Header
 POST http://198.23.226.199/innoapi/device/1/sensor HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {
 	"sen_name":"sensor1",
@@ -720,7 +721,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 14
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {"sen_id":"1"}
 }}}
@@ -735,7 +736,7 @@ HTTP Header
 GET http://198.23.226.199/innoapi/device/1/sensor/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 }}}
 
@@ -750,7 +751,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 211
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 [
 {
@@ -777,7 +778,7 @@ HTTP Header
 GET http://198.23.226.199/innoapi/device/1/sensor HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 }}}
 ====2.3.3.2	输出====
@@ -791,7 +792,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 421
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 [
 {
@@ -829,7 +830,7 @@ HTTP Header
 PUT http://198.23.226.199/innoapi/device/1/sensor/2 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {
 	"sen_name":"sensor2",
@@ -849,7 +850,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {"success":1}
 }}}
@@ -863,7 +864,7 @@ HTTP Header
 DELETE http://198.23.226.199/innoapi/device/1/sensor/2 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 }}}
 
@@ -878,7 +879,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {"success":1}
 }}}
@@ -894,7 +895,7 @@ HTTP Header
 POST http://198.23.226.199/innoapi/device/1/sensor/1/datapoint HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {
 "timestamp":"2012-03-15T16:13:14",
@@ -908,7 +909,7 @@ HTTP Header
 POST http://198.23.226.199/innoapi/device/1/sensor/1/datapoint HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {
 "timestamp":"2012-03-15T16:13:14",
@@ -928,7 +929,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 14
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {"dat_id":"2"}
 }}}
@@ -945,7 +946,7 @@ API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 starttime: 2012-03-11 13:14
 endtime: 2013-03-16 5:24
 }}}
- HTTP Body 
+HTTP Body
 {{{
 }}}
 
@@ -960,7 +961,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 416
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 [
 {
@@ -999,7 +1000,7 @@ HTTP Header
 GET http://198.23.226.199/innoapi/device/1/sensor/1/datapoint/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 }}}
 
@@ -1013,7 +1014,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 209
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {"dat_id":"1","sen_id":"1","dat_time":"2012-03-15 16:13:14","dat_value":"294.34","dat_type":"value","dat_created_time":"2013-11-25 16:35:01","dat_modified_time":"2013-11-25 16:35:01","dev_id":"1","usr_id":"2"}
 }}}
@@ -1028,7 +1029,7 @@ HTTP Header
 PUT http://198.23.226.199/innoapi/device/1/sensor/1/datapoint/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {
   "timestamp":"2012-03-15T16:13:14",
@@ -1048,7 +1049,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {"success":1}
 }}}
@@ -1063,7 +1064,7 @@ HTTP Header
 DELETE http://198.23.226.199/innoapi/device/1/sensor/1/datapoint/1 HTTP/1.1
 API-KEY: 8d37d11a685ba18a46a1b3c207ea969b
 }}}
- HTTP Body 
+HTTP Body
 {{{
 }}}
 
@@ -1078,7 +1079,7 @@ X-Powered-By: PHP/5.5.3
 Content-Length: 13
 Content-Type: application/json
 }}}
- HTTP Body 
+HTTP Body
 {{{
 {"success":1}
 }}}
