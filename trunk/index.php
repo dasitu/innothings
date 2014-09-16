@@ -1,31 +1,6 @@
 <?php
 require "initial.php";
 
-//********** Log related function ************//
-$app->log->setEnabled(true);
-$app->log->setWriter(new \Slim\Logger\DateTimeFileWriter());
-
-//There are some level can be used, Only messages that have a level less than the current log object’s level will be logged.
-/*
-\Slim\Log::EMERGENCY
-Level 1
-\Slim\Log::ALERT
-Level 2
-\Slim\Log::CRITICAL
-Level 3
-\Slim\Log::ERROR
-Level 4
-\Slim\Log::WARN
-Level 5
-\Slim\Log::NOTICE
-Level 6
-\Slim\Log::INFO
-Level 7
-\Slim\Log::DEBUG
-Level 8
-*/
-$app->log->setLevel(\Slim\Log::DEBUG);
-
 //Use hook to log some generic access messages
 $app->hook('slim.before.dispatch', function () use ($app) {
 	$log = $app->getLog();
@@ -59,41 +34,49 @@ $app->get('/hello/:name', function ($name) use ($app) {
 	}
 });
 
-//********** some useful functions **********//
-//Get API key from HTTP header, then return the usr_id if it is valid
-function validateApiKey($app, $db){
-	// Get the API-KEY from header
-	$usr_key = $app->request->headers->get('API-KEY');
-	$user = $db->select("user", "usr_key = '$usr_key'");
-	if(empty($user)){
-		throw new Exception('Invalid API-KEY');
-	}
-	return $user[0]['usr_id'];
-}
-
-//Generate API-KEY according to the input
-function generateKey($seed){
-	$time = microtime();
-	$encode = md5($seed.$time);
-	return $encode;
-}
-
-//Check empty value from $value_arr, these $key_arr keys must existed and not empty
-//True if empty value is found
-function checkEmpty($value_arr, $key_arr){
-	foreach ($key_arr as $key){
-		if(empty($value_arr["$key"])){
-			return true;
-		}
-	}
-	return false;
-}
-
-
-
-
-
 /**********User related API**********/
+//Get the API-KEY
+$app->get('/key', function() use ($app, $db) {
+	try {
+		$log = $app->getLog();
+		//Validate user according to user name and password from http head
+		$usr_name = $app->request->headers->get('account');
+		$usr_pwd = $app->request->headers->get('password');
+		$mobile_code = $app->request->headers->get('mobile_code');
+		
+		$log->debug("Got the information from header: account=$usr_name,password=$usr_pwd,mobile_code=$mobile_code");
+		//mobile_code is higher priority
+		//use mobile code to login first
+		if($mobile_code){
+			$log->debug("Geting key by username=$usr_name and mobile code=$mobile_code");
+			$msg = "User name or mobile code is not correct or expired";
+			$user = $db->select("user", "usr_name = '$usr_name' and usr_mobile_code = '$mobile_code' and usr_code_expire > NOW()");
+		}
+		//use user password to login
+		else if($usr_pwd){
+			$log->debug("Getting key by user name=$usr_name and password=$usr_pwd");
+			$user = $db->select("user", "usr_name = '$usr_name' and usr_pwd = '$usr_pwd' ");
+			$msg = "User name or password is not correct";
+		}
+		else{
+			$user = "";
+			$msg = "Both password and mobile code are empty";
+		}
+		//start to authenticate if we have the value
+		if(empty($user)){
+			throw new Exception("$msg");
+		}
+		
+		$app->response()->header('Content-Type', 'application/json');
+		echo json_encode(array('key'=>$user[0]['usr_key']));
+	}
+	catch (Exception $e) {
+		$app->response()->status(400);
+		$app->response()->header('X-Status-Reason', $e->getMessage());
+		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
+	}
+});
+
 //Create new user
 $app->post('/user', function() use ($app, $db) {
 	try {
@@ -225,10 +208,6 @@ $app->delete('/user/:id', function($id) use ($app, $db) {
 		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
-
-
-
-
 
 /**********Device related API**********/
 //Create new device
@@ -388,10 +367,6 @@ $app->delete('/device/:id', function($id) use ($app, $db) {
 	}
 });
 
-
-
-
-
 //**********Sensor related API**********//
 //Create new sensor
 $app->post('/device/:id/sensor', function($dev_id) use ($app, $db) {
@@ -538,10 +513,6 @@ $app->delete('/device/:id/sensor/:sid', function($dev_id, $sen_id) use ($app, $d
 		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
-
-
-
-
 
 //**********Data point related API**********//
 //Create new data
