@@ -33,6 +33,73 @@ $app->get('/hello/:name', function ($name) use ($app) {
 		$app->log->error('['.$app->request->getIp().']' . $e->getMessage());
 	}
 });
+//*********** Request to send the Text Message to some mobile phone *******//
+$app->get('/mobilecode', function() use ($app, $db, $smsSender){
+	try {
+		$log = $app->getLog();
+		//Validate the authentication code to avoid some illegal calls
+		$sms_auth_code = $app->request->headers->get('auth_code');
+		$mobile_number = $app->request->headers->get('mobile');
+		$log->debug("Got sms auth_code=$sms_auth_code and mobile=$mobile_number from http header");
+		if(isValid($sms_auth_code))
+		{
+			// get and decode JSON request body
+			$log->debug("SMS authentication code passed.");
+			
+			//Get the config data from initial.php
+			$smsConf = $app->config('smsConf');
+			$smsData = $smsConf["smsData"];
+			$tempId = $smsConf["tempId"];
+			$expire = $smsConf["expire"];
+			
+			// start to send
+			$log->debug("Sending $smsData to $mobile_number using template ID:$tempId...");
+			$result = $smsSender->sendTemplateSMS($mobile_number,$smsData,$tempId);
+			if($result == NULL ) {
+				throw new Exception("Unknown error from SMS service provider.");
+				break;
+			}
+			if($result->statusCode!=0) {
+				throw new Exception($result->statusMsg,$result->statusCode);
+				break;
+			}
+			else {
+				//get the reture result
+				$smsResult = $result->TemplateSMS;
+				$log->debug("Message has been sent to $mobile_number.");
+				//Update the mobile code to DB
+				//Check whether use existed
+				$log->debug("Selecting the user according to usr_tel=$mobile_number");
+				$user = $db->select("user","usr_tel=$mobile_number");
+				if(empty($user)){
+					$log->debug("Can not find the user, start to insert new user.");
+					//insert the new user
+				}
+				else{
+					$created = $smsResult->dateCreated;
+					$new_expire = date("Y-m-d G:H:s",strtotime($created. "+" . 60*$smsConf["expire"] . "seconds"));
+					$log->debug("User has been found, start to update the usr_mobile_code=".$smsData[0]." and usr_code_expire=".$new_expire."where usr_tel=$mobile_number");
+					//just update the mobile code and expire date
+					$user['usr_mobile_code'] = $smsData[0];
+					$user['usr_code_expire'] = $new_expire;
+					$db->update("user", $user, "usr_tel='$mobile_number'");
+					$log->debug("User[$mobile_number] mobile code and expire updated.");
+				}
+			}
+		}
+		else
+			throw new Exception("Illegal calls, and it has been recorded.");
+	}
+	catch (Exception $e) {
+		$app->response()->status(400);
+		$msg = $e->getMessage();
+		if($e->getCode()){
+			$msg = "[" . $e->getCode . "]" . $e->getMessage();
+		}
+		$app->response()->header('X-Status-Reason', $msg);
+		$app->log->error('['.$app->request->getIp().']' . $msg);
+	}
+});
 
 /**********User related API**********/
 //Get the API-KEY
