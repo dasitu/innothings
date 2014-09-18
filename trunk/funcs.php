@@ -1,33 +1,5 @@
 <?php
-//********** some useful functions **********//
-function sendTemplateSMS($to,$datas,$tempId)
-{
-     // 初始化REST SDK
-     global $accountSid,$accountToken,$appId,$serverIP,$serverPort,$softVersion;
-     $rest = new REST($serverIP,$serverPort,$softVersion);
-     $rest->setAccount($accountSid,$accountToken);
-     $rest->setAppId($appId);
-    
-     // 发送模板短信
-     echo "Sending TemplateSMS to $to <br/>";
-     $result = $rest->sendTemplateSMS($to,$datas,$tempId);
-     if($result == NULL ) {
-         echo "result error!";
-         break;
-     }
-     if($result->statusCode!=0) {
-         echo "error code :" . $result->statusCode . "<br>";
-         echo "error msg :" . $result->statusMsg . "<br>";
-         //TODO 添加错误处理逻辑
-     }else{
-         echo "Sendind TemplateSMS success!<br/>";
-         // 获取返回信息
-         $smsmessage = $result->TemplateSMS;
-         echo "dateCreated:".$smsmessage->dateCreated."<br/>";
-         echo "smsMessageSid:".$smsmessage->smsMessageSid."<br/>";
-         //TODO 添加成功处理逻辑
-     }
-}
+
 //Get API key from HTTP header, then return the usr_id if it is valid
 function validateApiKey($app, $db){
 	// Get the API-KEY from header
