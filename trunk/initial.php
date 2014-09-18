@@ -46,7 +46,7 @@ $smsSender->setAccount($accountSid,$accountToken);
 $smsSender->setAppId($appId);
 //生成全局配置，方便直接使用
 $smsConf = array(
-	"tempID" => $tempId,
+	"tempId" => $tempId,
 	"expire" => $expire,
 	"smsData" => $smsData
 );
