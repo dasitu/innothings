@@ -35,7 +35,9 @@ Linux + MySQL + Apache(Nginx) + PHP
 ====输入====
 
 HTTP Header
+
 authCode的生成方法请直接联系我
+
 {{{
 GET http://198.23.226.199/innoapi/mobilecode HTTP/1.1
 authCode: a8ab58430dbf2aadfc7e7cb83f061ffd
@@ -57,9 +59,11 @@ HTTP Body
 {"success":1}
 }}}
 ====异常情况====
-1. AuthCode不正确： "Illegal calls, and it has been recorded."
+1. authCode不正确: "Illegal calls, and it has been recorded."
+
 2. 其它异常来自于短信平台
 http://docs.yuntongxun.com/index.php/%E9%94%99%E8%AF%AF%E4%BB%A3%E7%A0%81
+
 
 ===获得用户的KPI-KEY===
 ====输入====
