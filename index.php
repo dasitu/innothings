@@ -4,16 +4,16 @@ require "initial.php";
 //Use hook to log some generic access messages
 $app->hook('slim.before.dispatch', function () use ($app) {
 	$log = $app->getLog();
-    $request = $app->request;
+	$request = $app->request;
 	$ip = $request->getIp();
 	$method = $app->request->getMethod();
-    $log->debug("[$ip]Request path: [$method]" . $request->getPathInfo());
+	$log->debug("[$ip]Request path: [$method]" . $request->getPathInfo());
 });
 $app->hook('slim.after.router', function () use ($app) {
 	$log = $app->getLog();
-    $request = $app->request;
+	$request = $app->request;
 	$ip = $request->getIp();
-    $response = $app->response;
+	$response = $app->response;
 	$log->debug("[$ip]Response status: " . $response->getStatus());
 }); 
 
@@ -23,9 +23,9 @@ $app->get('/hello/:name', function ($name) use ($app) {
 		$log = $app->getLog();
 		$log->debug("Get the parameter: $name.");
 		if($name == "exception"){
-			throw new Exception('User exception is trying');
+			throw new Exception('User exception is called');
 		}
-		echo "Hello, $name";	
+		echo "Hello, $name";
 	}
 	catch (Exception $e) {
 		$app->response()->status(400);
@@ -38,10 +38,10 @@ $app->get('/mobilecode', function() use ($app, $db, $smsSender){
 	try {
 		$log = $app->getLog();
 		//Validate the authentication code to avoid some illegal calls
-		$sms_auth_code = $app->request->headers->get('auth_code');
+		$sms_auth_code = $app->request->headers->get('authCode');
 		$mobile_number = $app->request->headers->get('mobile');
 		$log->debug("Got sms auth_code=$sms_auth_code and mobile=$mobile_number from http header");
-		if(isValid($sms_auth_code))
+		if(validateSmsAuth($sms_auth_code,$mobile_number))
 		{
 			// get and decode JSON request body
 			$log->debug("SMS authentication code passed.");
@@ -53,7 +53,8 @@ $app->get('/mobilecode', function() use ($app, $db, $smsSender){
 			$expire = $smsConf["expire"];
 			
 			// start to send
-			$log->debug("Sending $smsData to $mobile_number using template ID:$tempId...");
+			$log->debug("Sending ".$smsData[0]." to $mobile_number using template ID:$tempId");
+			$result = "";
 			$result = $smsSender->sendTemplateSMS($mobile_number,$smsData,$tempId);
 			if($result == NULL ) {
 				throw new Exception("Unknown error from SMS service provider.");
@@ -64,7 +65,7 @@ $app->get('/mobilecode', function() use ($app, $db, $smsSender){
 				break;
 			}
 			else {
-				//get the reture result
+				//get the return result
 				$smsResult = $result->TemplateSMS;
 				$log->debug("Message has been sent to $mobile_number.");
 				//Update the mobile code to DB
@@ -77,14 +78,16 @@ $app->get('/mobilecode', function() use ($app, $db, $smsSender){
 				}
 				else{
 					$created = $smsResult->dateCreated;
-					$new_expire = date("Y-m-d G:H:s",strtotime($created. "+" . 60*$smsConf["expire"] . "seconds"));
+					$new_expire = date("Y-m-d H:i:s",strtotime($created."+".$smsConf["expire"]." minutes"));
 					$log->debug("User has been found, start to update the usr_mobile_code=".$smsData[0]." and usr_code_expire=".$new_expire."where usr_tel=$mobile_number");
 					//just update the mobile code and expire date
 					$user['usr_mobile_code'] = $smsData[0];
 					$user['usr_code_expire'] = $new_expire;
 					$db->update("user", $user, "usr_tel='$mobile_number'");
-					$log->debug("User[$mobile_number] mobile code and expire updated.");
+					$log->debug("User($mobile_number) mobile code and expire updated.");
 				}
+				$app->response()->header('Content-Type', 'application/json');
+				echo json_encode(array('success' => 1));
 			}
 		}
 		else
@@ -94,7 +97,7 @@ $app->get('/mobilecode', function() use ($app, $db, $smsSender){
 		$app->response()->status(400);
 		$msg = $e->getMessage();
 		if($e->getCode()){
-			$msg = "[" . $e->getCode . "]" . $e->getMessage();
+			$msg = "[" . $e->getCode() . "]" . $e->getMessage();
 		}
 		$app->response()->header('X-Status-Reason', $msg);
 		$app->log->error('['.$app->request->getIp().']' . $msg);
@@ -109,21 +112,21 @@ $app->get('/key', function() use ($app, $db) {
 		//Validate user according to user name and password from http head
 		$usr_name = $app->request->headers->get('account');
 		$usr_pwd = $app->request->headers->get('password');
-		$mobile_code = $app->request->headers->get('mobile_code');
+		$mobile_code = $app->request->headers->get('mobileCode');
 		
 		$log->debug("Got the information from header: account=$usr_name,password=$usr_pwd,mobile_code=$mobile_code");
 		//mobile_code is higher priority
 		//use mobile code to login first
 		if($mobile_code){
 			$log->debug("Geting key by username=$usr_name and mobile code=$mobile_code");
-			$msg = "User name or mobile code is not correct or expired";
+			$msg = "User name($usr_name) or mobile code($mobile_code) is not correct or expired";
 			$user = $db->select("user", "usr_name = '$usr_name' and usr_mobile_code = '$mobile_code' and usr_code_expire > NOW()");
 		}
 		//use user password to login
 		else if($usr_pwd){
 			$log->debug("Getting key by user name=$usr_name and password=$usr_pwd");
 			$user = $db->select("user", "usr_name = '$usr_name' and usr_pwd = '$usr_pwd' ");
-			$msg = "User name or password is not correct";
+			$msg = "User name($usr_name) or password($usr_pwd) is not correct";
 		}
 		else{
 			$user = "";
@@ -241,7 +244,6 @@ $app->put('/user/:id', function($id) use ($app, $db) {
 
 		//send the json response header
 		$app->response()->header('Content-Type', 'application/json');
-		
 		echo json_encode(array('success' => 1));
 	} 
 	catch (Exception $e) {

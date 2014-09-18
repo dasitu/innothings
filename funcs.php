@@ -11,6 +11,15 @@ function validateApiKey($app, $db){
 	return $user[0]['usr_id'];
 }
 
+//Validate the authentication code for SMS sender
+function validateSmsAuth($sms_auth_code,$mobile_number){
+	//TODO: Some more secure encrypt and decrypt method should be update here.
+	if(md5($mobile_number)==$sms_auth_code){
+		return true;
+	}
+	return false;
+}
+
 //Generate API-KEY according to the input
 function generateKey($seed){
 	$time = microtime();

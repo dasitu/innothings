@@ -1,4 +1,3 @@
-
 <?php
 /*
  *  Copyright (c) 2014 The CCP project authors. All Rights Reserved.
@@ -28,7 +27,7 @@ class REST {
 	private $Batch;  //时间戳
 	private $BodyType = "json";//包体格式，可填值：json 、xml
 	private $enabeLog = true; //日志开关。可填值：true、
-	private $Filename="./log/sms.log"; //日志文件
+	private $Filename="./logs/sms.log"; //日志文件
 	private $Handle; 
 	function __construct($ServerIP,$ServerPort,$SoftVersion)	
 	{
@@ -81,7 +80,7 @@ class REST {
     */
     function showlog($log){
       if($this->enabeLog){
-         fwrite($this->Handle,$log."\n");  
+         fwrite($this->Handle,date('c')."-".$log."\n");  
       }
     }
     
