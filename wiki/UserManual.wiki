@@ -31,6 +31,36 @@ Linux + MySQL + Apache(Nginx) + PHP
 
 ==用户相关的API==
 
+===发送短信验证码===
+====输入====
+
+HTTP Header
+authCode的生成方法请直接联系我
+{{{
+GET http://198.23.226.199/innoapi/mobilecode HTTP/1.1
+authCode: a8ab58430dbf2aadfc7e7cb83f061ffd
+mobile: 13812345678
+}}}
+HTTP Body
+{{{
+}}}
+
+====输出====
+
+HTTP Header
+{{{
+HTTP/1.1 200 OK
+Content-Type: application/json
+}}}
+HTTP Body
+{{{
+{"success":1}
+}}}
+====异常情况====
+1. AuthCode不正确： "Illegal calls, and it has been recorded."
+2. 其它异常来自于短信平台
+http://docs.yuntongxun.com/index.php/%E9%94%99%E8%AF%AF%E4%BB%A3%E7%A0%81
+
 ===获得用户的KPI-KEY===
 ====输入====
 
@@ -39,7 +69,7 @@ HTTP Header
 GET http://198.23.226.199/innoapi/key HTTP/1.1
 account: test1
 password: test1
-mobile_code: 000000
+mobileCode: 000000
 }}}
 HTTP Body
 {{{
@@ -58,12 +88,12 @@ HTTP Body
 }}}
 ====异常情况====
 =====输入数据不完整=====
- # account或者mobile_code至少要包含一个
+ # account或者mobileCode至少要包含一个
  # account必填
  * X-Status-Reason: Both password and mobile code are empty
 =====验证之后不正确=====
  * X-Status-Reason: User name or mobile code is not correct or expired
- * 手机验证码有效期为5分钟
+	 * 手机验证码有效期为5分钟
  * X-Status-Reason: User name or password is not correct
 
 ===创建单个新用户===
