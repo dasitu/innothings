@@ -10,7 +10,6 @@ require 'funcs.php';
 $app = new \Slim\Slim();
 $app->config('debug', false);
 
-
 //********** set up database connection **********//
 $dsn = "mysql:host=localhost;port=3306;dbname=innothing";
 $dbuser = "test";
@@ -32,7 +31,7 @@ $accountToken = '8bcd2b195e75494e9130e99c302e1d8b';
 $appId = '8a48b5514864415701487ce7cf3b08e2';
 //请求地址，格式如下，不需要写https://
 $serverIP = 'sandboxapp.cloopen.com';
-//请求端口 
+//请求端口
 $serverPort = '8883';
 //REST版本号
 $softVersion = '2013-12-26';
@@ -48,9 +47,9 @@ $smsSender->setAccount($accountSid,$accountToken);
 $smsSender->setAppId($appId);
 //生成全局配置，方便直接使用
 $smsConf = array(
-	"tempId" => $tempId,
-	"expire" => $expire,
-	"smsData" => $smsData
-);
+               "tempId" => $tempId,
+               "expire" => $expire,
+               "smsData" => $smsData
+           );
 $app->config('smsConf',$smsConf);
 ?>
