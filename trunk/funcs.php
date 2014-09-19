@@ -37,4 +37,9 @@ function checkEmpty($value_arr, $key_arr){
 	}
 	return false;
 }
+
+//PDO Wrapper Error Handler 
+function pdoErrorHandler($error) {
+	throw new Exception("$error");
+}
 ?>

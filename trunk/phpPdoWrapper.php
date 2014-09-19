@@ -27,9 +27,35 @@ class db extends PDO {
 			if(!empty($this->bind))
 				$error["Bind Parameters"] = trim(print_r($this->bind, true));
 
-			$backtrace = debug_backtrace();
-			if(!empty($backtrace)) {
-				foreach($backtrace as $info) {
+			//########## Someworkaround for known PHP bug######//
+			$aTrace = debug_backtrace();
+			// Loop backwards (!) through array
+			for ( $sFile = '', $iLine = 0, $i = count( $aTrace ); $i--; ) {
+				// Make sure all fields are set
+				$aTrace[$i] = array_merge(
+					array(
+						'function' => '',
+						'type' => '',
+						'class' => '',
+						'object' => array(),
+						'args' => array(),
+						'file' => $sFile,
+						'line' => $iLine), 
+					$aTrace[$i]
+				);
+
+				// Add this for convenience
+				$aTrace[$i]['call'] = $aTrace[$i]['class'] . $aTrace[$i]['type'] . $aTrace[$i]['function'];
+
+				// Missing file or line? Copy from previous item
+				$sFile = $aTrace[$i]['file'];
+				$iLine = $aTrace[$i]['line'];
+			}
+
+			// Remove first item ("this function")
+			array_shift( $aTrace );
+			if(!empty($aTrace)) {
+				foreach($aTrace as $info) {
 					if($info["file"] != __FILE__)
 						$error["Backtrace"] = $info["file"] . " at line " . $info["line"];	
 				}		
