@@ -80,7 +80,7 @@ class REST {
     */
     function showlog($log){
       if($this->enabeLog){
-         fwrite($this->Handle,date('c')."-".$log."\n");  
+         fwrite($this->Handle,date('c')." - ".$log."\n");  
       }
     }
     

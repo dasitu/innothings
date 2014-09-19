@@ -8,13 +8,15 @@ require 'funcs.php';
 //********** register Slim auto-loader **********//
 \Slim\Slim::registerAutoloader();
 $app = new \Slim\Slim();
-$app->config('debug', true);
+$app->config('debug', false);
+
 
 //********** set up database connection **********//
 $dsn = "mysql:host=localhost;port=3306;dbname=innothing";
 $dbuser = "test";
 $dbpass = "test12";
 $db = new db($dsn, $dbuser, $dbpass);
+$db->setErrorCallbackFunction("pdoErrorHandler", "text");
 
 //********** log related setup **********//
 $app->log->setEnabled(true);
