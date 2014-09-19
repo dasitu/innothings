@@ -75,7 +75,7 @@ class DateTimeFileWriter
      * (string) The log file name format; parsed with `date()`.
      *
      * extension:
-     * (string) The file extention to append to the filename`.     
+     * (string) The file extention to append to the filename`.
      *
      * message_format:
      * (string) The log message format; available tokens are...
@@ -90,11 +90,11 @@ class DateTimeFileWriter
     {
         //Merge user settings
         $this->settings = array_merge(array(
-            'path' => './logs',
-            'name_format' => 'Y-m-d',
-            'extension' => 'log',
-            'message_format' => '%label% - %date% - %message%'
-        ), $settings);
+                                          'path' => './logs',
+                                          'name_format' => 'Y-m-d',
+                                          'extension' => 'log',
+                                          'message_format' => '%label% - %date% - %message%'
+                                      ), $settings);
 
         //Remove trailing slash from log path
         $this->settings['path'] = rtrim($this->settings['path'], DIRECTORY_SEPARATOR);
@@ -111,36 +111,39 @@ class DateTimeFileWriter
     {
         //Determine label
         $label = 'DEBUG';
-        switch ($level) {
-            case \Slim\Log::FATAL:
-                $label = 'FATAL';
-                break;
-            case \Slim\Log::ERROR:
-                $label = 'ERROR';
-                break;
-            case \Slim\Log::WARN:
-                $label = 'WARN';
-                break;
-            case \Slim\Log::INFO:
-                $label = 'INFO';
-                break;
+        switch ($level)
+        {
+        case \Slim\Log::FATAL:
+            $label = 'FATAL';
+            break;
+        case \Slim\Log::ERROR:
+            $label = 'ERROR';
+            break;
+        case \Slim\Log::WARN:
+            $label = 'WARN';
+            break;
+        case \Slim\Log::INFO:
+            $label = 'INFO';
+            break;
         }
 
         //Get formatted log message
         $message = str_replace(array(
-            '%label%',
-            '%date%',
-            '%message%'
-        ), array(
-            $label,
-            date('c'),
-            (string)$object
-        ), $this->settings['message_format']);
+                                   '%label%',
+                                   '%date%',
+                                   '%message%'
+                               ), array(
+                                   $label,
+                                   date('c'),
+                                   (string)$object
+                               ), $this->settings['message_format']);
 
         //Open resource handle to log file
-        if (!$this->resource) {
+        if (!$this->resource)
+        {
             $filename = date($this->settings['name_format']);
-            if (! empty($this->settings['extension'])) {
+            if (! empty($this->settings['extension']))
+            {
                 $filename .= '.' . $this->settings['extension'];
             }
 
